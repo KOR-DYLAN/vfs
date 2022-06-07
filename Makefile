@@ -60,6 +60,7 @@ $(CURDIR)/Makefile Makefile: ;
 ifneq ($(KBUILD_OUTPUT),)
 # Invoke a second make in the output directory, passing relevant variables
 # check that the output directory actually exists
+$(shell mkdir -p $(KBUILD_OUTPUT))
 saved-output := $(KBUILD_OUTPUT)
 KBUILD_OUTPUT := $(shell cd $(KBUILD_OUTPUT) && /bin/pwd)
 $(if $(KBUILD_OUTPUT),, \
@@ -332,29 +333,29 @@ endif # $(dot-config)
 # command line.
 # This allow a user to issue only 'make' to build a kernel including modules
 # Defaults to vmlinux, but the arch makefile usually adds further targets
-all: myapp
+all: vfs
 
 
 objs-y		:= main
 libs-y		:= lib
 
-myapp-dirs	:= $(objs-y) $(libs-y)
-myapp-objs	:= $(patsubst %,%/built-in.o, $(objs-y))
-myapp-libs	:= $(patsubst %,%/lib.a, $(libs-y))
-myapp-all	:= $(myapp-objs) $(myapp-libs)
+vfs-dirs	:= $(objs-y) $(libs-y)
+vfs-objs	:= $(patsubst %,%/built-in.o, $(objs-y))
+vfs-libs	:= $(patsubst %,%/lib.a, $(libs-y))
+vfs-all	:= $(vfs-objs) $(vfs-libs)
 
 # Do modpost on a prelinked vmlinux. The finally linked vmlinux has
 # relevant sections renamed as per the linker script.
-quiet_cmd_myapp = LD      $@
-      cmd_myapp = $(CC) $(LDFLAGS) -o $@                          \
-      -Wl,--start-group $(myapp-libs) $(myapp-objs) -Wl,--end-group
+quiet_cmd_vfs = LD      $@
+      cmd_vfs = $(CC) $(LDFLAGS) -o $@                          \
+      -Wl,--start-group $(vfs-libs) $(vfs-objs) -Wl,--end-group
 
-myapp: $(myapp-all)
-	$(call if_changed,myapp)
+vfs: $(vfs-all)
+	$(call if_changed,vfs)
 
 # The actual objects are generated when descending, 
 # make sure no implicit rule kicks in
-$(sort $(myapp-all)): $(myapp-dirs) ;
+$(sort $(vfs-all)): $(vfs-dirs) ;
 
 # Handle descending into subdirectories listed in $(vmlinux-dirs)
 # Preset locale variables to speed up the build process. Limit locale
@@ -364,8 +365,8 @@ $(sort $(myapp-all)): $(myapp-dirs) ;
 
 #PHONY += $(vmlinux-dirs)
 #$(vmlinux-dirs): prepare scripts
-PHONY += $(myapp-dirs)
-$(myapp-dirs): scripts_basic
+PHONY += $(vfs-dirs)
+$(vfs-dirs): scripts_basic
 	$(Q)$(MAKE) $(build)=$@
 
 
@@ -378,7 +379,7 @@ $(myapp-dirs): scripts_basic
 
 # Directories & files removed with 'make clean'
 CLEAN_DIRS  +=
-CLEAN_FILES +=	myapp
+CLEAN_FILES +=	vfs
 
 # Directories & files removed with 'make mrproper'
 MRPROPER_DIRS  += include/config include/generated
@@ -388,7 +389,7 @@ MRPROPER_FILES += .config .config.old tags TAGS cscope* GPATH GTAGS GRTAGS GSYMS
 #
 clean: rm-dirs  := $(CLEAN_DIRS)
 clean: rm-files := $(CLEAN_FILES)
-clean-dirs      := $(addprefix _clean_, $(myapp-dirs))
+clean-dirs      := $(addprefix _clean_, $(vfs-dirs))
 
 PHONY += $(clean-dirs) clean archclean
 $(clean-dirs):
@@ -457,7 +458,7 @@ help:
 	@echo  ''
 	@echo  'Other generic targets:'
 	@echo  '  all		  - Build all targets marked with [*]'
-	@echo  '* myapp	  	  - Build the application'
+	@echo  '* vfs	  	  - Build the application'
 	@echo  '  dir/            - Build all files in dir and below'
 	@echo  '  dir/file.[oisS] - Build specified target only'
 	@echo  '  dir/file.lst    - Build specified mixed source/assembly target only'

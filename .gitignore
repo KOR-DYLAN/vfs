@@ -38,7 +38,7 @@ modules.builtin
 #
 /tags
 /TAGS
-/myapp
+/vfs
 /System.map
 /Module.markers
 /Module.symvers
@@ -77,3 +77,6 @@ GTAGS
 *.orig
 *~
 \#*#
+
+# output dir
+build/**

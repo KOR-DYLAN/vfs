@@ -2,7 +2,7 @@
 # For a description of the syntax of this configuration file,
 # see Documentation/kbuild/kconfig-language.txt.
 #
-mainmenu "MYAPP Configuration"
+mainmenu "vfs Configuration"
 
 #config SRCARCH
 #	string
@@ -19,14 +19,3 @@ config CROSS_COMPILE
 	  directory to select the cross-compiler automatically.
 
 source "lib/Kconfig"
-
-config FOO
-	bool "Foo"
-	help
-	  foo.
-
-config BAR
-	bool "Bar"
-	depends on FOO
-	help
-	  bar.

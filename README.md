@@ -30,7 +30,7 @@ Building
         make config    # This creates a file called ".config"
         make           # This creates an executable
 
-These steps generate a small application `myapp`,
+These steps generate a small application `vfs`,
 which just print some messages to the console.
 
 The full list of configuration and build targets is available by:
@@ -40,24 +40,24 @@ The full list of configuration and build targets is available by:
 How to use this template?
 -------------------------
 
-This project includes a small program called `myapp` just for example.
-So when you start your own project, replace C source files of `myapp`
+This project includes a small program called `vfs` just for example.
+So when you start your own project, replace C source files of `vfs`
 with those of your own.
-C source files of `myapp` are located under `lib/` and `main/` and `include/`.
+C source files of `vfs` are located under `lib/` and `main/` and `include/`.
 If you don't need them, delete all of them.
 Although, of course, you can still reuse them for your own project.
 You will also need to modify `Kconfig` for your project.
 
 In order to change the name of application, modify the top-level Makefile.
 
-        grep -i myapp *
+        grep -i vfs *
 
-will show the lines where `myapp` string are used.
-Modify those `myapp` strings with your application name.
+will show the lines where `vfs` string are used.
+Modify those `vfs` strings with your application name.
 
 You can add more subdirectories by adding to `objs-y` or `libs-y` variables
 of top-level `Makefile`.
-For `myapp`, these variable are set as follows:
+For `vfs`, these variable are set as follows:
 
         objs-y          := main
         libs-y          := lib
@@ -65,7 +65,7 @@ For `myapp`, these variable are set as follows:
 In this case, all objectes under `main/` subdirectory are combined together
 into `main/builtin.o`, and all objects under `lib/` subdirectory are archived
 as `lib/lib.a`.
-Finally, they are linked to generate the final application, `myapp`.
+Finally, they are linked to generate the final application, `vfs`.
 
 About the detail of how to write makefiles under subdirectories, refer to:
 `Documentation/kbuild/makefiles.txt`.
