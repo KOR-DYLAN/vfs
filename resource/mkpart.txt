@@ -1,0 +1,35 @@
+[1] check mmc
+$> ll /dev | grep mmc
+brw-rw----   1 root    disk    179,     0  6월  7 14:02 mmcblk0
+brw-rw----   1 root    disk    179,     1  6월  7 14:02 mmcblk0p1
+brw-rw----   1 root    disk    179,     2  6월  7 14:02 mmcblk0p2
+
+[2] clear mmcblk0
+$> sudo dd if=/dev/zero of=/dev/mmcblk0 bs=512 count=8k status=progress
+
+[3] create mbr & partition
+$> sudo fdisk /dev/mmcblk0
+Command (m for help): o
+Created a new DOS disklabel with disk identifier 0x6be8cb68.
+
+Command (m for help): n
+Partition type
+   p   primary (0 primary, 0 extended, 4 free)
+   e   extended (container for logical partitions)
+Select (default p): p
+Partition number (1-4, default 1): 
+First sector (2048-31116287, default 2048): 
+Last sector, +/-sectors or +/-size{K,M,G,T,P} (2048-31116287, default 31116287): 
+
+Created a new partition 1 of type 'Linux' and of size 14.9 GiB.
+
+Command (m for help): w
+The partition table has been altered.
+Calling ioctl() to re-read partition table.
+Syncing disks.
+
+[4] create fat32
+mkfs.vfat
+    -s SECTORS-PER-CLUSTER
+    -S LOGICAL-SECTOR-SIZE
+$> sudo mkfs.vfat /dev/mmcblk0p1 -F 32 -S 512 -s 8 -I
