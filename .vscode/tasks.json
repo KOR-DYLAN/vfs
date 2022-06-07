@@ -1,0 +1,74 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "config",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "V=${config:Makefile.VERBOSE}",
+                "O=${config:Makefile.BUILD_DIR}",
+                "${config:Makefile.DEF_CONFIG}",
+                "CFLAGS_KERNEL=${config:Makefile.CFLAGS_KERNEL}"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "V=${config:Makefile.VERBOSE}",
+                "O=${config:Makefile.BUILD_DIR}",
+                "CFLAGS_KERNEL=${config:Makefile.CFLAGS_KERNEL}"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "clean",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "V=${config:Makefile.VERBOSE}",
+                "O=${config:Makefile.BUILD_DIR}",
+                "clean"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        },
+        {
+            "label": "distclean",
+            "type": "shell",
+            "command": "make",
+            "args": [
+                "V=${config:Makefile.VERBOSE}",
+                "O=${config:Makefile.BUILD_DIR}",
+                "distclean"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$gcc"
+            ]
+        }
+    ]
+}

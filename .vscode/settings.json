@@ -1,0 +1,9 @@
+{
+    "Makefile": {
+        "TARGET": "vfs",
+        "BUILD_DIR": "build",
+        "DEF_CONFIG": "vfs_defconfig",
+        "VERBOSE": "1",
+        "CFLAGS_KERNEL": "-g"
+    }
+}
