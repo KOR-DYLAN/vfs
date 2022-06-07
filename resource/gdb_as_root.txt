@@ -1,0 +1,9 @@
+[1] gdb root permission
+$> sudo vim /usr/bin/gdb_root
+#!/bin/sh
+sudo /usr/bin/gdb "$@"
+
+$> sudo visudo
+....
+dylan7h ALL=(root) NOPASSWD:/usr/bin/gdb_root
+dylan7h ALL=(root) NOPASSWD:/usr/bin/gdb
