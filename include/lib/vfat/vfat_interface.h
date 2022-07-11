@@ -7,12 +7,6 @@
 # define MBR_GENERIC_PATITION_LEN       (16)
 # define MBR_GENERIC_NUM_OF_PATITION    (4)
 
-#define PART_ID_NTFS                    (0x07)
-#define PART_ID_exFAT                   (0x07)
-#define PART_ID_FAT32_CHS               (0x0B)
-#define PART_ID_FAT32_LBA               (0x0C)
-#define PART_ID_LINUX                   (0x83)
-
 #define MBR_SIGNATURE                   (0xAA55)
 
 union __tag_master_boot_record
@@ -22,7 +16,7 @@ union __tag_master_boot_record
     {
         uint8_t bootstrap[MBR_GENERIC_BOOTSTRAP_LEN];
 
-        struct 
+        struct  __attribute__((__packed__))
         {
             uint32_t bootflag   : 8;
             uint32_t chs_start  : 24;
@@ -95,7 +89,15 @@ union __tag_partition_boot_record   /* alias of reserved area : 0, 6 sector*/
     struct __attribute__((__packed__))
     {
         uint8_t     boot_code[3];                                   /* offset: 0x00,  3 byte - Jump Command to Boot Code */
+#define     VFAT_BOOT_CODE_FAT32            (0x9058EB)
+#define     VFAT_BOOT_CODE_FAT12_16         (0x903CEB)
+#define     VFAT_BOOT_CODE_NTFS             (0x9052EB)
+#define     VFAT_BOOT_CODE_MASK             (0xFFFFFF)
         uint8_t     oem_id[8];                                      /* offset: 0x03,  8 byte - OEM(Original Equipment Manufacturing) ID  */
+#define     VFAT_OEM_ID_WIN95               ("MSWIN4.0")
+#define     VFAT_OEM_ID_WIN98               ("MSWIN4.1")
+#define     VFAT_OEM_ID_WIN_NT              ("MSWIN5.0")
+#define     VFAT_OEM_ID_LINUX               ("mkdosfs")
         BPP_t       bpp;                                            /* offset: 0x0B, 79 byte - BPB(BIOS Parameter Block)  */
         char        err_message[420];                               /* offset: 0x5A, 420 byte - Boot Code Error Message  */
         uint16_t    signature;                                      /* offset: 0x1FE, 2 byte - FAT32 File System VBR Area Signature( 0xAA55 )  */
@@ -124,6 +126,44 @@ union __tag_file_system_information   /* alias of reserved area : 1, 7 sector*/
 };
 typedef union __tag_file_system_information FSINFO_t;
 
+union __tag_root_entry
+{
+    uint8_t mem[32];
+    struct __attribute__((__packed__))
+    {
+        uint8_t file_name[8];
+        uint8_t extension[3];
+        uint8_t attribute;
+        uint8_t windows_nt;
+        uint8_t creation_time[3];
+        uint8_t creation_date[2];
+        uint8_t last_access_date[2];
+        uint16_t first_cluster_upper;
+        uint8_t last_modified_time[2];
+        uint8_t last_modified_date[2];
+        uint16_t first_cluster_lower;
+        uint32_t file_size;
+    } field;
+};
+typedef union __tag_root_entry ROOT_ENRTRY_t;
+
+struct __tag_vfat
+{
+    pbr_t * pbr;
+    FSINFO_t *fs_info;
+    
+    uint32_t size_of_fat;
+
+    uint32_t fat1_base_offset;
+    uint32_t fat2_base_offset;
+
+    uint32_t cluster_per_bytes;
+    uint32_t cluster_base_offset;
+};
+typedef struct __tag_vfat vfat_t;
+
 void vfat_parse_mbr(int fd);
+
+uint32_t vfat_get_cluster_offset(vfat_t *instance, uint32_t cluster_num);
 
 #endif  //!__VFAT_INTERFACE__H__
